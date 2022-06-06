@@ -1,0 +1,16 @@
+{
+  "name": "train-data",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@deck.gl/core": "^8.7.10",
+    "@deck.gl/layers": "^8.7.10",
+    "mapbox-gl": "^2.8.2"
+  }
+}
