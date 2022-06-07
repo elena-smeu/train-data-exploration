@@ -4,6 +4,7 @@
         <link href="./index.css" rel="stylesheet" />
         <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.0/mapbox-gl.css' rel='stylesheet' />
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
     </head>
     <body>
             <div id="container">
@@ -11,8 +12,10 @@
             <canvas id="deck-canvas"></canvas>
             <div id="toolbox" class="flex flex-column justify-center z-10 border drop-shadow-md cursor-none">
                 <div class="text-lg">Train Routes Austria</div>
+                <div id="slider"></div>
             </div>
         </div>
         <script src="./index.js"></script>
+        <script src="./src/time_slider.js"></script>
     </body>
 </html>
