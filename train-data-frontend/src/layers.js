@@ -7,12 +7,13 @@ export const train_stops_layer  = (stopFeatures, isLightMode) => (
       data: stopFeatures,
       // Styles
       filled: true,
-      pointRadiusMinPixels: 1,
-      pointRadiusScale: 1000,
-      getPointRadius: 1,
-      getFillColor: isLightMode? LIGHT_MODE.train_stop_color : DARK_MODE.train_stop_color
+      pickable: true,
+      pointRadiusMinPixels: 2,
+      pointRadiusScale: 1300,
+      getPointRadius: 1.5,
+      getFillColor: isLightMode? LIGHT_MODE.train_stop_color : DARK_MODE.train_stop_color.map
     })
-)
+) 
 export const train_routes_layer = (routes, isLightMode) => (
   new PathLayer({
       id: 'train-routes',
@@ -22,6 +23,7 @@ export const train_routes_layer = (routes, isLightMode) => (
     widthMinPixels: 5,
     getPath: d => d.path,
     getWidth: 10,
-    getColor: [27, 163, 156, 1]
+    getColor: [63, 195, 128, 5]
+    , onClick: (info, e) =>  console.log(info)
     })
 )
