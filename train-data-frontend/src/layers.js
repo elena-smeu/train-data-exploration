@@ -20,7 +20,7 @@ export const train_routes_layer = (routes, isLightMode) => (
       data: routes,
     pickable: true,
     widthScale: 20,
-    widthMinPixels: 5,
+    widthMinPixels: 3,
     getPath: d => d.path,
     getWidth: 10,
     getColor: [63, 195, 128, 5]
