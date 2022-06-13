@@ -4,7 +4,7 @@ import {Map_MapBox} from './src/map_austria';
 import {train_routes_layer, train_stops_layer} from './src/layers';
 import {toolboxInit} from './src/toolbox';
 import {getStopByCoordinate} from "./src/helpers";
-let isLightMode = true;
+let isLightMode = false;
 
 
 const stops_AT = require('./data/stops_AT.json');
