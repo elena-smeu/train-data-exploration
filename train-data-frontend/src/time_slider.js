@@ -1,58 +1,39 @@
-var width = 960,
-    height = 500;
+var sheet = document.createElement('style'),  
+  $rangeInput = $('.range input'),
+  prefs = ['webkit-slider-runnable-track', 'moz-range-track', 'ms-track'];
 
-var circumference_r = 100;
+document.body.appendChild(sheet);
 
-var drag = d3.drag()
-  .subject(function(d) { return d; })
-  .on("start", dragstarted)
-  .on("drag", dragged)
-  .on("end", dragended);
-
-var svg = d3.select("#slider").append("svg")
-  .attr("width", width)
-  .attr("height", height)
-  .append("g")
-    .attr("transform", "translate(" + width/2 + "," + height/2 + ")");
-
-var container = svg.append("g");
-
-var circumference = container.append('circle')
-  .attr('r', circumference_r)
-  .attr('class', 'circumference');
-
-handle = [{
-  x: 0,
-  y: -circumference_r
-}];
-
-handle_circle = container.append("g")
-  .attr("class", "dot")
-    .selectAll('circle')
-  .data(handle)
-    .enter().append("circle")
-  .attr("r", 5)
-  .attr("cx", function(d) { return d.x;})
-  .attr("cy", function(d) { return d.y;})
-  .call(drag);
-
-function dragstarted(d) {
-  d3.event.sourceEvent.stopPropagation();
-  d3.select(this)
-    .classed("dragging", true);
-}
-
-function dragged(d) {  
-  d_from_origin = Math.sqrt(Math.pow(d3.event.x,2)+Math.pow(d3.event.y,2));
+var getTrackStyle = function (el) {  
+  var curVal = el.value,
+      val = (curVal - 1) * 16.666666667,
+      style = '';
   
-  alpha = Math.acos(d3.event.x/d_from_origin);
+  // Set active label
+  $('.range-labels li').removeClass('active selected');
   
-  d3.select(this)
-    .attr("cx", d.x = circumference_r*Math.cos(alpha))
-    .attr("cy", d.y = d3.event.y < 0 ? -circumference_r*Math.sin(alpha) : circumference_r*Math.sin(alpha));
+  var curLabel = $('.range-labels').find('li:nth-child(' + curVal + ')');
+  
+  curLabel.addClass('active selected');
+  curLabel.prevAll().addClass('selected');
+  
+  // Change background gradient
+  for (var i = 0; i < prefs.length; i++) {
+    style += '.range {background: linear-gradient(to right, #37adbf 0%, #37adbf ' + val + '%, #fff ' + val + '%, #fff 100%)}';
+    style += '.range input::-' + prefs[i] + '{background: linear-gradient(to right, #37adbf 0%, #37adbf ' + val + '%, #b2b2b2 ' + val + '%, #b2b2b2 100%)}';
+  }
+
+  return style;
 }
 
-function dragended(d) {
-  d3.select(this)
-    .classed("dragging", false);
-}
+$rangeInput.on('input', function () {
+  sheet.textContent = getTrackStyle(this);
+});
+
+// Change input value on label click
+$('.range-labels li').on('click', function () {
+  var index = $(this).index();
+  
+  $rangeInput.val(index + 1).trigger('input');
+  
+});
