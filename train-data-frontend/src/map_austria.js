@@ -7,8 +7,7 @@ mapboxgl.accessToken =
 export const Map_MapBox = (isLightMode) => (new mapboxgl.Map({
   container: 'map',
   style: isLightMode ? LIGHT_MODE.mapstyle : DARK_MODE.mapstyle,
-  // Note: deck.gl will be in charge of interaction and event handling
-  interactive: false,
+  interactive: true,
   center: [INITIAL_VIEW_STATE.longitude, INITIAL_VIEW_STATE.latitude],
   zoom: INITIAL_VIEW_STATE.zoom
 }));

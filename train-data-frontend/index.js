@@ -1,16 +1,18 @@
-import {Deck} from '@deck.gl/core';
-import {INITIAL_VIEW_STATE} from './src/helpers';
 import {Map_MapBox} from './src/map_austria';
-import {train_routes_layer, train_stops_layer} from './src/layers';
 import {toolboxInit} from './src/toolbox';
-import {getStopByCoordinate} from "./src/helpers";
-import {Slider} from 'slid'
+import {DARK_MODE,LIGHT_MODE, getStopByCoordinate} from "./src/helpers";
+import mapboxgl from "mapbox-gl";
 let isLightMode = false;
-
 
 const stops_AT = require('./data/stops_AT.json');
 const stops_ALL = require('./data/stops_ALL.json');
 let routes = require('./data/stop_times_grp.json');
+
+let id = 0;
+let goodRoutes = require("./data/stop_times_all.json");
+
+console.log(goodRoutes);
+
 
 const stopFeatures = stops_AT.map(stop => 
     ({geometry: 
@@ -19,27 +21,81 @@ const stopFeatures = stops_AT.map(stop =>
     type: "Feature"
     , message: stop.stop_name
     }));
-routes = routes.map((route) => {
-  const firstOne = getStopByCoordinate(route.path[0], stops_ALL).stop_name;
 
-  const lastStop = getStopByCoordinate(route.path[route.path.length - 1], stops_ALL).stop_name; 
-  console.log(route);
-  route['message'] = firstOne + " - " + lastStop; return route});
-const map = Map_MapBox(isLightMode);
+let map = Map_MapBox(isLightMode);
+console.log(goodRoutes);
+
 toolboxInit(isLightMode);
-export const deck = new Deck({
-  container: 'deck-canvas',
-  initialViewState: INITIAL_VIEW_STATE,
-  onViewStateChange: ({viewState}) => {
-    map.jumpTo({
-      center: [viewState.longitude, viewState.latitude],
-      zoom: viewState.zoom
-    });
-  },
-  layers: [
-   train_routes_layer(routes, isLightMode),
-   train_stops_layer(stopFeatures, isLightMode)
-  ],
-  getTooltip: ({object}) => object && object.message,
-  getCursor: () => "pointer"
+
+const data = (hour) => {
+  return {
+      type: 'FeatureCollection',
+      features: goodRoutes.map( route => ({
+          type: 'Feature',
+          properties: {
+            color: '#F7455D'
+            , title: route.path[0].stop_name + " - " + route.path[route.path.length - 1].stop_name
+          }
+          , geometry: {
+            type: 'LineString'
+            , coordinates: route.path.map(path => path.coordinates)
+          }
+        }
+        
+        ))
+  
+  }
+}
+
+const renderMap = () => {
+map.on('load', () => {
+map.addSource('lines', {
+'type': 'geojson',
+'data': data(1)
+}
+);
+
+
+map.addLayer({
+'id': 'lines',
+'type': 'line',
+'source': 'lines',
+'paint': {
+'line-width': 3,
+// Use a get expression (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-get)
+// to set the line-color to a feature property value.
+'line-color': ['get', 'color']
+, 'line-opacity': 0.5
+}
 });
+id++;
+$('.range input').on('input', (el) => {
+  const hourValue =  $('.range input').val();
+  map.getSource('lines').setData(data(hourValue));
+})
+
+
+});
+
+}
+
+renderMap();
+
+//**Tooltip stuff */
+map.on('click', (event) => {
+  const features = map.queryRenderedFeatures(event.point);
+
+  if (!features.length) {
+  return;
+  }
+  const feature = features[0];
+  
+  const popup = new mapboxgl.Popup({ offset: [0, -15] })
+  .setLngLat(feature.geometry.coordinates[0])
+  .setHTML(
+  `<h3>${feature.properties.title}</h3>`
+  )
+  .addTo(map); 
+
+});
+

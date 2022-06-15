@@ -118,6 +118,12 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"src/time_slider.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports._inputEl = void 0;
 var sheet = document.createElement('style'),
     $rangeInput = $('.range input'),
     prefs = ['webkit-slider-runnable-track', 'moz-range-track', 'ms-track'];
@@ -125,30 +131,27 @@ document.body.appendChild(sheet);
 
 var getTrackStyle = function getTrackStyle(el) {
   var curVal = el.value,
-      val = (curVal - 1) * 16.666666667,
+      val = curVal * 5,
       style = ''; // Set active label
 
   $('.range-labels li').removeClass('active selected');
   var curLabel = $('.range-labels').find('li:nth-child(' + curVal + ')');
   curLabel.addClass('active selected');
-  curLabel.prevAll().addClass('selected'); // Change background gradient
-
-  for (var i = 0; i < prefs.length; i++) {
-    style += '.range {background: linear-gradient(to right, #37adbf 0%, #37adbf ' + val + '%, #fff ' + val + '%, #fff 100%)}';
-    style += '.range input::-' + prefs[i] + '{background: linear-gradient(to right, #37adbf 0%, #37adbf ' + val + '%, #b2b2b2 ' + val + '%, #b2b2b2 100%)}';
-  }
-
+  curLabel.prevAll().addClass('selected');
   return style;
 };
 
 $rangeInput.on('input', function () {
-  sheet.textContent = getTrackStyle(this);
+  var trackedStyle = getTrackStyle(this);
+  sheet.textContent = trackedStyle;
 }); // Change input value on label click
 
 $('.range-labels li').on('click', function () {
   var index = $(this).index();
   $rangeInput.val(index + 1).trigger('input');
 });
+var _inputEl = $rangeInput;
+exports._inputEl = _inputEl;
 },{}],"../../../../.nvm/versions/node/v16.15.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

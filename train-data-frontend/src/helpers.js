@@ -12,7 +12,6 @@ export const getStopByCoordinate = ([lat, long], stops) => {
     const found = stopToIterate.filter(stop => 
         {
             if( stop.coordinates[0] == lat && stop.coordinates[1] == long) {
-                console.log(stop);
                 return true
             }
             else false
