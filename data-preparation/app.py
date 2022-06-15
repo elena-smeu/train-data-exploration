@@ -29,9 +29,6 @@ cors = CORS(app, origins=['http://localhost:1234']);
 @app.route('/trips/<start_hour>/<end_hour>', methods = ['GET'])
 def create_data(start_hour, end_hour):
 
-    start_hour = 9  
-    end_hour = 12
-
     stops_data = stop_times_coord[(stop_times_coord["hour"] >= start_hour) & (stop_times_coord["hour"] <= end_hour)]
 
 # Creating a list fo dicts with information of the path with coordinates etc.
