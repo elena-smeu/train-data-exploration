@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 import json
 import pandas as pd
+from flask_cors import CORS, cross_origin
 
 # Loading stop information
 with open("./stops_ALL.json", 'r') as ft:
@@ -23,8 +24,9 @@ app = Flask(__name__)
 # ensure that we can reload when we change the HTML / JS for debugging
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+cors = CORS(app, origins=['http://localhost:1234']);
 
-@app.route('/trips/<int:start_hour>/<int:end_hour>')
+@app.route('/trips/<start_hour>/<end_hour>', methods = ['GET'])
 def create_data(start_hour, end_hour):
 
     start_hour = 9  
@@ -33,7 +35,7 @@ def create_data(start_hour, end_hour):
     stops_data = stop_times_coord[(stop_times_coord["hour"] >= start_hour) & (stop_times_coord["hour"] <= end_hour)]
 
 # Creating a list fo dicts with information of the path with coordinates etc.
-    stop_times_all = list()
+    stop_times_all = []
 
     for ids in list(stops_data.trip_id.unique()): 
         tempdf = stops_data[stops_data["trip_id"] == ids].copy()
@@ -46,12 +48,6 @@ def create_data(start_hour, end_hour):
 
         stop_times_all.append(tempdict)
         del tempdf
-# 
-    stop_times_all_json = json.dumps(stop_times_all)
 
-    # show the user profile for that user
-    return render_template("index.html", data=stop_times_all_json)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    return jsonify({'data': stop_times_all})
 

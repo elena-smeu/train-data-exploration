@@ -131,7 +131,6 @@ document.body.appendChild(sheet);
 
 var getTrackStyle = function getTrackStyle(el) {
   var curVal = el.value,
-      val = curVal * 5,
       style = ''; // Set active label
 
   $('.range-labels li').removeClass('active selected');
@@ -180,7 +179,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56102" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49597" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
