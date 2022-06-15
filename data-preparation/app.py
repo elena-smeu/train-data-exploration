@@ -26,14 +26,12 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 cors = CORS(app, origins=['http://localhost:1234']);
 
-@app.route('/trips/<start_hour>/<end_hour>', methods = ['GET'])
+@app.route('/trips/<int:start_hour>/<int:end_hour>', methods = ['GET'])
 def create_data(start_hour, end_hour):
 
     stops_data = stop_times_coord[(stop_times_coord["hour"] >= start_hour) & (stop_times_coord["hour"] <= end_hour)]
-
 # Creating a list fo dicts with information of the path with coordinates etc.
     stop_times_all = []
-
     for ids in list(stops_data.trip_id.unique()): 
         tempdf = stops_data[stops_data["trip_id"] == ids].copy()
         tempdf = tempdf.sort_values("stop_sequence")
